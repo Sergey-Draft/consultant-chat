@@ -1,29 +1,22 @@
-import { Meeting } from "../../types/meeting";
+import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
+import MeetingsList from "@/features/meetings/components/MeetingsList";
+import { getMeetings } from "@/features/meetings/api/getMeetings";
 
 export default async function ChatPage() {
-  const response = await fetch(`${process.env.APP_URL}/api/meetings`);
+  const queryClient = new QueryClient();
 
-  if (!response.ok) {
-    throw new Error("Failed to fetch meetings");
-  }
-
-  const meetings: Meeting[] = await response.json();
+  await queryClient.prefetchQuery({
+    queryKey: ["meetings"],
+    queryFn: getMeetings,
+  });
 
   return (
     <main>
       <h1>Consultant Chat</h1>
 
-      <section>
-        <h2>Meetings</h2>
-
-        {meetings.map((meeting) => (
-          <article key={meeting.id}>
-            <h3>{meeting.title}</h3>
-            <p>{meeting.date}</p>
-            <p>{meeting.status}</p>
-          </article>
-        ))}
-      </section>
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <MeetingsList />
+      </HydrationBoundary>
     </main>
   );
 }
