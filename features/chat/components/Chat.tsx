@@ -35,32 +35,27 @@ export default function Chat() {
     });
 
   return (
-    <section className="mx-auto w-full max-w-2xl overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-      {/* Header */}
-      <div className="border-b border-gray-200 px-5 py-4">
+    <section className="mx-auto w-full max-w-2xl overflow-hidden rounded-lg border border-coffee/25 bg-parchment/70 shadow-sm">
+      <div className="border-b border-dashed border-coffee/30 px-5 py-4">
         <div className="flex items-center justify-between gap-4">
           <div>
-            <h2 className="text-lg font-semibold text-gray-900">
+            <h2 className="font-display text-lg text-ink">
               Chat with consultant
             </h2>
 
-            <p className="mt-1 text-sm text-gray-500">
-              Real-time connection
-            </p>
+            <p className="mt-1 text-sm text-coffee">Real-time connection</p>
           </div>
 
           <div
-            className={`flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium ${
+            className={`flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm font-medium ${
               isConnected
-                ? "bg-green-50 text-green-700"
-                : "bg-red-50 text-red-700"
+                ? "border-sage/40 bg-sage/15 text-sage-dark"
+                : "border-bordeaux/40 bg-bordeaux/15 text-bordeaux-dark"
             }`}
           >
             <span
               className={`h-2 w-2 rounded-full ${
-                isConnected
-                  ? "bg-green-500"
-                  : "bg-red-500"
+                isConnected ? "bg-sage-dark" : "bg-bordeaux"
               }`}
             />
 
@@ -68,22 +63,18 @@ export default function Chat() {
           </div>
         </div>
 
-        {/* Connection details */}
-        <div className="mt-4 flex flex-wrap items-center gap-4 text-xs text-gray-500">
+        <div className="mt-4 flex flex-wrap items-center gap-4 text-xs text-coffee">
           <span>
-            Pending:{" "}
-            <span className="font-medium text-gray-700">
-              {pendingCount}
-            </span>
+            Pending: <span className="font-medium text-ink">{pendingCount}</span>
           </span>
 
           {!isConnected && reconnectIn !== null && (
             <>
-              <span className="text-gray-300">•</span>
+              <span className="text-coffee/40">•</span>
 
               <span>
                 Reconnecting in{" "}
-                <span className="font-medium text-gray-700">
+                <span className="font-medium text-ink">
                   {(reconnectIn / 1000).toFixed(1)}s
                 </span>
               </span>
@@ -91,10 +82,9 @@ export default function Chat() {
           )}
         </div>
 
-        {/* Activity */}
         {activities.length > 0 && (
-          <div className="mt-4 rounded-lg bg-gray-50 px-3 py-2.5">
-            <div className="mb-2 text-xs font-medium uppercase tracking-wide text-gray-400">
+          <div className="mt-4 rounded-md bg-cream px-3 py-2.5">
+            <div className="mb-2 text-xs font-medium uppercase tracking-wide text-coffee/70">
               Activity
             </div>
 
@@ -115,11 +105,11 @@ export default function Chat() {
                     {activity.type === "error" && "!"}
                   </span>
 
-                  <span className="min-w-0 flex-1 text-gray-600">
+                  <span className="min-w-0 flex-1 text-coffee">
                     {activity.message}
                   </span>
 
-                  <span className="shrink-0 text-gray-400">
+                  <span className="shrink-0 text-coffee/60">
                     {formatTime(activity.timestamp)}
                   </span>
                 </div>
@@ -129,42 +119,30 @@ export default function Chat() {
         )}
       </div>
 
-      {/* Messages */}
-      <div className="min-h-[320px] space-y-3 bg-gray-50 px-5 py-5">
+      <div className="min-h-[320px] space-y-3 bg-cream px-5 py-5">
         {messages.length === 0 ? (
-          <div className="flex min-h-[280px] items-center justify-center text-sm text-gray-400">
+          <div className="flex min-h-[280px] items-center justify-center text-sm text-coffee/60">
             No messages yet
           </div>
         ) : (
           messages.map((message) => (
-            <div
-              key={message.id}
-              className="flex justify-end"
-            >
-              <div className="max-w-[80%] rounded-2xl rounded-br-sm bg-blue-600 px-4 py-2.5 text-white shadow-sm">
-                <div className="text-sm">
-                  {message.text}
-                </div>
+            <div key={message.id} className="flex justify-end">
+              <div className="max-w-[80%] rounded-2xl rounded-br-sm bg-bordeaux px-4 py-2.5 text-cream shadow-sm">
+                <div className="text-sm">{message.text}</div>
 
-                <div className="mt-1 flex items-center justify-end gap-2 text-xs text-blue-100">
-                  {message.status === "pending" && (
-                    <span>Sending...</span>
-                  )}
+                <div className="mt-1 flex items-center justify-end gap-2 text-xs text-cream/70">
+                  {message.status === "pending" && <span>Sending...</span>}
 
-                  {message.status === "sent" && (
-                    <span>Sent</span>
-                  )}
+                  {message.status === "sent" && <span>Sent</span>}
 
                   {message.status === "failed" && (
                     <>
-                      <span className="text-red-200">
-                        Failed
-                      </span>
+                      <span className="text-mustard">Failed</span>
 
                       <button
                         type="button"
                         onClick={() => retryMessage(message.id)}
-                        className="rounded-md bg-white/15 px-2 py-0.5 font-medium text-white transition hover:bg-white/25"
+                        className="rounded-md bg-cream/15 px-2 py-0.5 font-medium text-cream transition hover:bg-cream/25"
                       >
                         Retry
                       </button>
@@ -177,36 +155,34 @@ export default function Chat() {
         )}
       </div>
 
-      {/* Input */}
       <form
         onSubmit={handleSubmit}
-        className="flex gap-3 border-t border-gray-200 bg-white p-4"
+        className="flex gap-3 border-t border-coffee/25 bg-parchment/70 p-4"
       >
         <input
           value={text}
           onChange={(event) => setText(event.target.value)}
           placeholder="Type a message..."
-          className="min-w-0 flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+          className="min-w-0 flex-1 rounded-md border border-coffee/30 bg-cream px-3 py-2 text-sm text-ink outline-none transition placeholder:text-coffee/50 focus:border-bordeaux focus:ring-2 focus:ring-bordeaux/15"
         />
 
         <button
           type="submit"
           disabled={!text.trim()}
-          className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+          className="rounded-md bg-bordeaux px-4 py-2 text-sm font-medium text-cream transition hover:bg-bordeaux-dark disabled:cursor-not-allowed disabled:opacity-50"
         >
           Send
         </button>
       </form>
 
-      {/* Developer / test controls */}
-      <div className="border-t border-gray-100 bg-white px-5 py-3">
+      <div className="border-t border-coffee/20 bg-parchment/70 px-5 py-3">
         <div className="flex items-center justify-between gap-4">
           <div>
-            <p className="text-xs font-medium text-gray-500">
+            <p className="text-xs font-medium text-coffee">
               Developer controls
             </p>
 
-            <p className="mt-0.5 text-xs text-gray-400">
+            <p className="mt-0.5 text-xs text-coffee/70">
               Test WebSocket disconnect and retry flow
             </p>
           </div>
@@ -215,7 +191,7 @@ export default function Chat() {
             type="button"
             onClick={simulateDisconnect}
             disabled={!isConnected || isSimulatingDisconnect}
-            className="shrink-0 rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-600 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+            className="shrink-0 rounded-md border border-coffee/40 px-3 py-1.5 text-xs font-medium text-coffee transition hover:bg-coffee/10 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {isSimulatingDisconnect
               ? "Simulating..."

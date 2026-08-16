@@ -359,12 +359,6 @@ export function useChat() {
     ],
   );
 
-  /**
-   * Development/test helper.
-   *
-   * Simulates a lost connection and keeps the application
-   * offline for a few seconds so the retry flow can be demonstrated.
-   */
   const simulateDisconnect = useCallback(() => {
     if (isSimulatingDisconnect) {
       return;
