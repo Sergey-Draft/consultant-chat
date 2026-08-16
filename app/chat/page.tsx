@@ -1,29 +1,43 @@
-import { Meeting } from "../../types/meeting";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
+import MeetingsList from "@/features/meetings/components/MeetingsList";
+import { getMeetingsServer } from "@/features/meetings/api/getMeetingsServer";
+import Chat from "@/features/chat/components/Chat";
+
+export const dynamic = "force-dynamic";
 
 export default async function ChatPage() {
-  const response = await fetch(`${process.env.APP_URL}/api/meetings`);
+  const queryClient = new QueryClient();
 
-  if (!response.ok) {
-    throw new Error("Failed to fetch meetings");
-  }
-
-  const meetings: Meeting[] = await response.json();
+  await queryClient.prefetchQuery({
+    queryKey: ["meetings"],
+    queryFn: getMeetingsServer,
+  });
 
   return (
-    <main>
-      <h1>Consultant Chat</h1>
+    <main className="min-h-screen px-4 py-10 sm:px-8">
+      <div className="mx-auto max-w-5xl">
+        <header className="mb-8">
+          <h1 className="font-display text-3xl tracking-wide text-ink sm:text-4xl">
+            Consultant Chat
+          </h1>
 
-      <section>
-        <h2>Meetings</h2>
+          <p className="mt-2 text-sm text-coffee">
+            Your meetings on one side, a live line to your consultant on the
+            other.
+          </p>
+        </header>
 
-        {meetings.map((meeting) => (
-          <article key={meeting.id}>
-            <h3>{meeting.title}</h3>
-            <p>{meeting.date}</p>
-            <p>{meeting.status}</p>
-          </article>
-        ))}
-      </section>
+        <HydrationBoundary state={dehydrate(queryClient)}>
+          <div className="flex flex-col items-start gap-6 lg:flex-row lg:justify-center">
+            <MeetingsList />
+            <Chat />
+          </div>
+        </HydrationBoundary>
+      </div>
     </main>
   );
 }
